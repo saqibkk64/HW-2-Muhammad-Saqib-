@@ -1,0 +1,93 @@
+#include <iostream>
+
+class Figure {
+public:
+    virtual double calculateArea() const = 0;
+    virtual double calculatePerimeter() const = 0;
+};
+
+class Triangle : public Figure {
+private:
+    double base;
+    double height;
+
+public:
+    Triangle(double base, double height) : base(base), height(height) {}
+
+    double getBase() const { return base; }
+    void setBase(double newBase) { base = newBase; }
+
+    double getHeight() const { return height; }
+    void setHeight(double newHeight) { height = newHeight; }
+
+    virtual double calculateArea() const override {
+        return 0.5 * base * height;
+    }
+
+    virtual double calculatePerimeter() const override {
+        // Assuming it's a generic triangle without specifying sides
+        // Perimeter calculation may vary for different types of triangles
+        // Implement accordingly based on the specific triangle type.
+        return 0;
+    }
+};
+
+class Rectangle : public Figure {
+private:
+    double length;
+    double width;
+
+public:
+    Rectangle(double length, double width) : length(length), width(width) {}
+
+    double getLength() const { return length; }
+    void setLength(double newLength) { length = newLength; }
+
+    double getWidth() const { return width; }
+    void setWidth(double newWidth) { width = newWidth; }
+
+    virtual double calculateArea() const override {
+        return length * width;
+    }
+
+    virtual double calculatePerimeter() const override {
+        return 2 * (length + width);
+    }
+};
+
+class Circle : public Figure {
+private:
+    double radius;
+
+public:
+    Circle(double radius) : radius(radius) {}
+
+    double getRadius() const { return radius; }
+    void setRadius(double newRadius) { radius = newRadius; }
+
+    virtual double calculateArea() const override {
+        return 3.141592653589793 * radius * radius;
+    }
+
+    virtual double calculatePerimeter() const override {
+        return 2 * 3.141592653589793 * radius;
+    }
+};
+
+int main() {
+    // Example usage
+    Triangle triangle(3.0, 4.0);
+    Rectangle rectangle(5.0, 6.0);
+    Circle circle(2.5);
+
+    std::cout << "Triangle Area: " << triangle.calculateArea() << std::endl;
+    std::cout << "Triangle Perimeter: " << triangle.calculatePerimeter() << std::endl;
+
+    std::cout << "Rectangle Area: " << rectangle.calculateArea() << std::endl;
+    std::cout << "Rectangle Perimeter: " << rectangle.calculatePerimeter() << std::endl;
+
+    std::cout << "Circle Area: " << circle.calculateArea() << std::endl;
+    std::cout << "Circle Perimeter: " << circle.calculatePerimeter() << std::endl;
+
+    return 0;
+}
