@@ -1,0 +1,160 @@
+#include <iostream>
+#include <cmath>
+
+class Fraction {
+private:
+    int numerator;
+    int denominator;
+
+    // Function to find the greatest common divisor (GCD)
+    int gcd(int a, int b) {
+        if (b == 0)
+            return a;
+        return gcd(b, a % b);
+    }
+
+    // Function to simplify the fraction
+    void simplify() {
+        int commonFactor = gcd(std::abs(numerator), std::abs(denominator));
+        numerator /= commonFactor;
+        denominator /= commonFactor;
+
+        // Adjust the sign
+        if (denominator < 0) {
+            numerator = -numerator;
+            denominator = -denominator;
+        }
+    }
+
+public:
+    // Constructors
+    Fraction() : numerator(0), denominator(1) {}
+    Fraction(int num, int den) : numerator(num), denominator(den) { simplify(); }
+
+    // Getters and setters
+    int getNumerator() const { return numerator; }
+    int getDenominator() const { return denominator; }
+
+    void setNumerator(int num) {
+        numerator = num;
+        simplify();
+    }
+
+    void setDenominator(int den) {
+        if (den != 0) {
+            denominator = den;
+            simplify();
+        } else {
+            std::cerr << "Error: Denominator cannot be zero." << std::endl;
+        }
+    }
+
+    // Overloaded compound assignment operators
+    Fraction& operator+=(const Fraction& other) {
+        numerator = numerator * other.denominator + other.numerator * denominator;
+        denominator *= other.denominator;
+        simplify();
+        return *this;
+    }
+
+    Fraction& operator-=(const Fraction& other) {
+        numerator = numerator * other.denominator - other.numerator * denominator;
+        denominator *= other.denominator;
+        simplify();
+        return *this;
+    }
+
+    Fraction& operator*=(const Fraction& other) {
+        numerator *= other.numerator;
+        denominator *= other.denominator;
+        simplify();
+        return *this;
+    }
+
+    Fraction& operator/=(const Fraction& other) {
+        if (other.numerator != 0) {
+            numerator *= other.denominator;
+            denominator *= other.numerator;
+            simplify();
+        } else {
+            std::cerr << "Error: Division by zero." << std::endl;
+        }
+        return *this;
+    }
+
+    // Conversion to double
+    double toDouble() const {
+        return static_cast<double>(numerator) / denominator;
+    }
+};
+
+// Overloaded arithmetic operators
+Fraction operator+(const Fraction& a, const Fraction& b) {
+    Fraction result = a;
+    result += b;
+    return result;
+}
+
+Fraction operator-(const Fraction& a, const Fraction& b) {
+    Fraction result = a;
+    result -= b;
+    return result;
+}
+
+Fraction operator*(const Fraction& a, const Fraction& b) {
+    Fraction result = a;
+    result *= b;
+    return result;
+}
+
+Fraction operator/(const Fraction& a, const Fraction& b) {
+    Fraction result = a;
+    result /= b;
+    return result;
+}
+
+// Overloaded input and output operators
+std::ostream& operator<<(std::ostream& os, const Fraction& fraction) {
+    os << fraction.getNumerator() << "/" << fraction.getDenominator();
+    return os;
+}
+
+std::istream& operator>>(std::istream& is, Fraction& fraction) {
+    int num, den;
+    char slash;
+    is >> num >> slash >> den;
+
+    // Check if the input is valid
+    if (slash == '/' && is) {
+        fraction.setNumerator(num);
+        fraction.setDenominator(den);
+    } else {
+        std::cerr << "Invalid input for Fraction." << std::endl;
+        is.setstate(std::ios::failbit);
+    }
+
+    return is;
+}
+
+int main() {
+    Fraction a(1, 2);
+    Fraction b(3, 4);
+
+    std::cout << "Initial fractions: a = " << a << ", b = " << b << std::endl;
+
+    a += b;
+    std::cout << "After a += b: " << a << std::endl;
+
+    a -= b;
+    std::cout << "After a -= b: " << a << std::endl;
+
+    a *= b;
+    std::cout << "After a *= b: " << a << std::endl;
+
+    a /= b;
+    std::cout << "After a /= b: " << a << std::endl;
+
+    std::cout << "a as double: " << a.toDouble() << std::endl;
+
+    return 0;
+}
